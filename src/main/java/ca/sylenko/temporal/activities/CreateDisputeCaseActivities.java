@@ -1,0 +1,12 @@
+package ca.sylenko.temporal.activities;
+
+import io.temporal.activity.ActivityInterface;
+import io.temporal.activity.ActivityMethod;
+
+@ActivityInterface
+public interface CreateDisputeCaseActivities {
+
+	@ActivityMethod
+	public void createDisputeCase(String caseId);
+
+}
