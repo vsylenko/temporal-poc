@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Temporal POC for Credit Card Payment Dispute Resolution
 
 
@@ -39,3 +40,6 @@ Workflows and Activities are declared as interfaces, which are then implemented 
 
 In this example, we put all the code in one component. However, you could implement activities in other microservices. You can also nest workflows if you wish.
 
+=======
+# temporal-poc
+>>>>>>> branch 'main' of https://github.com/vsylenko/temporal-poc.git
