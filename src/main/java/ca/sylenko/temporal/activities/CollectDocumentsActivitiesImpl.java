@@ -8,7 +8,13 @@ public class CollectDocumentsActivitiesImpl implements CollectDocumentsActivitie
     @Override
     public void collectDocuments(String caseId) {
         System.out.println("Collecting documents for case: " + caseId);
-        // Simulate document collection
-        Workflow.sleep(Duration.ofSeconds(5));
+        try {
+            // Simulate document collection
+            Thread.sleep(5000);  // Sleep for 5 seconds
+        } catch (InterruptedException e) {
+            // Handle the exception as needed
+            Thread.currentThread().interrupt();
+            System.out.println("Document collection was interrupted for case: " + caseId);
+        }
     }
 }

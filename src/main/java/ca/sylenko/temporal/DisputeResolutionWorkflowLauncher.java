@@ -11,23 +11,28 @@ import ca.sylenko.temporal.workflows.DisputeResolutionWorkflowImpl;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
+import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 
 public class DisputeResolutionWorkflowLauncher {
 
 	private static final String TASK_QUEUE = "dispute resolution queue";
+	private static final String TEMPORAL_SERVER_URL = "localhost:7233";
 
 	public static void main(String[] args) {
 
-		WorkflowServiceStubs serviceStub = WorkflowServiceStubs.newInstance();
+		// Use the new WorkflowServiceStubsOptions to configure and create WorkflowServiceStubs
+		WorkflowServiceStubsOptions options = WorkflowServiceStubsOptions.newBuilder().setTarget(TEMPORAL_SERVER_URL).build();
+		WorkflowServiceStubs serviceStub = WorkflowServiceStubs.newServiceStubs(options);
+
 		WorkflowClient client = WorkflowClient.newInstance(serviceStub);
 
 		WorkerFactory factory = WorkerFactory.newInstance(client);
 		Worker worker = factory.newWorker(TASK_QUEUE);
 		worker.registerWorkflowImplementationTypes(DisputeResolutionWorkflowImpl.class);
 
-		// Supported activities
+		// Register activity implementations
 		worker.registerActivitiesImplementations(new CreateDisputeCaseActivitiesImpl(),
 				new CollectDocumentsActivitiesImpl(), new VerifyDocumentsActivitiesImpl(),
 				new ResolveDisputeActivitiesImpl(), new NotificationActivitiesImpl(),
@@ -39,5 +44,4 @@ public class DisputeResolutionWorkflowLauncher {
 				WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).build());
 		WorkflowClient.start(workflow::startDisputeResolution, "case12345");
 	}
-
 }
