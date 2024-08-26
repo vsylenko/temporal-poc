@@ -38,10 +38,10 @@ public class DisputeResolutionWorkflowLauncher {
 				new ResolveDisputeActivitiesImpl(), new NotificationActivitiesImpl(),
 				new GenerateReportActivitiesImpl());
 
-		factory.start();
+		factory.start(); // Worker is ready tosStart listening to the Task Queue
 
 		DisputeResolutionWorkflow workflow = client.newWorkflowStub(DisputeResolutionWorkflow.class,
-				WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).build());
-		WorkflowClient.start(workflow::startDisputeResolution, "case12345");
+				WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).build());// Start a single workflow execution 
+		WorkflowClient.start(workflow::startDisputeResolution, "case12345"); // Pass the case ID as an argument
 	}
 }
