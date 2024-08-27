@@ -8,6 +8,7 @@ import ca.sylenko.temporal.activities.ResolveDisputeActivitiesImpl;
 import ca.sylenko.temporal.activities.VerifyDocumentsActivitiesImpl;
 import ca.sylenko.temporal.workflows.DisputeResolutionWorkflow;
 import ca.sylenko.temporal.workflows.DisputeResolutionWorkflowImpl;
+import io.temporal.api.enums.v1.WorkflowIdReusePolicy;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
@@ -19,11 +20,14 @@ public class DisputeResolutionWorkflowLauncher {
 
 	private static final String TASK_QUEUE = "dispute resolution queue";
 	private static final String TEMPORAL_SERVER_URL = "localhost:7233";
+	private static final String WORKDLOW_ID = "dispute-resolution-workflow-case-";
 
 	public static void main(String[] args) {
 
-		// Use the new WorkflowServiceStubsOptions to configure and create WorkflowServiceStubs
-		WorkflowServiceStubsOptions options = WorkflowServiceStubsOptions.newBuilder().setTarget(TEMPORAL_SERVER_URL).build();
+		// Use the new WorkflowServiceStubsOptions to configure and create
+		// WorkflowServiceStubs
+		WorkflowServiceStubsOptions options = WorkflowServiceStubsOptions.newBuilder().setTarget(TEMPORAL_SERVER_URL)
+				.build();
 		WorkflowServiceStubs serviceStub = WorkflowServiceStubs.newServiceStubs(options);
 
 		WorkflowClient client = WorkflowClient.newInstance(serviceStub);
@@ -40,8 +44,16 @@ public class DisputeResolutionWorkflowLauncher {
 
 		factory.start(); // Worker is ready tosStart listening to the Task Queue
 
-		DisputeResolutionWorkflow workflow = client.newWorkflowStub(DisputeResolutionWorkflow.class,
-				WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).build());// Start a single workflow execution 
-		WorkflowClient.start(workflow::startDisputeResolution, "case12345"); // Pass the case ID as an argument
+		// A dispute resolution processing Workflow might include case number in the Workflow ID
+		WorkflowOptions workflowOptions = WorkflowOptions.newBuilder()
+				.setWorkflowId(WORKDLOW_ID + "NS-12345") // Append the case ID to the Workflow ID
+				.setTaskQueue(TASK_QUEUE)
+				.setWorkflowIdReusePolicy(
+						WorkflowIdReusePolicy.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY)  // Allow duplicate Workflow IDs only if the previous Workflow execution failed
+				.build();
+
+		// Start the single Workflow execution
+		DisputeResolutionWorkflow workflow = client.newWorkflowStub(DisputeResolutionWorkflow.class, workflowOptions);
+		WorkflowClient.start(workflow::startDisputeResolution, "NS-12345"); // Pass the case ID as an argument
 	}
 }
