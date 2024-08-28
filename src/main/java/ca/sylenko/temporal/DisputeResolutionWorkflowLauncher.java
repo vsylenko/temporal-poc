@@ -63,12 +63,10 @@ public class DisputeResolutionWorkflowLauncher {
 
 		// Start the single Workflow execution
 		DisputeResolutionWorkflow workflow = client.newWorkflowStub(DisputeResolutionWorkflow.class, workflowOptions);
-
 		// Blocking start of Workflow (execution will be waiting until it's completed)
 		WorkflowClient.start(workflow::startDisputeResolution, caseId); // Pass the case ID as an argument
 
-		// Workflow will be started at this point but the call doesn't block.
+		// Example: Workflow will be started at this point but the call doesn't block.
 		// WorkflowClient.execute(workflow::startDisputeResolution, "NS-12346");
-
 	}
 }
