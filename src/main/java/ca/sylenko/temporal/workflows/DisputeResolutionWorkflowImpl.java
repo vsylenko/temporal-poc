@@ -17,7 +17,7 @@ import io.temporal.common.RetryOptions;
 import io.temporal.workflow.Workflow;
 
 public class DisputeResolutionWorkflowImpl implements DisputeResolutionWorkflow {
-	private static final Logger log = LoggerFactory.getLogger(DisputeResolutionWorkflowImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(DisputeResolutionWorkflowImpl.class);
 
 	/**
 	 * This example illustrates how to use a retry policy in a Workflow.
@@ -66,6 +66,9 @@ public class DisputeResolutionWorkflowImpl implements DisputeResolutionWorkflow 
 
 	@Override
 	public void startDisputeResolution(String caseId) {
+		// examaple of logging
+		logger.info("Preparing to execute CreateDisputeCaseActivities for caseId {}", caseId); 
+		
 		// In this case, all activities are blocking/synchronous (executed sequentially one after another)
 		createDisputeActivities.createDisputeCase(caseId);
 		collectDocumentActivities.collectDocuments(caseId);

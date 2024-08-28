@@ -46,7 +46,7 @@ public class DisputeResolutionWorkflowLauncher {
 
 		// A dispute resolution processing Workflow might include case number in the Workflow ID
 		WorkflowOptions workflowOptions = WorkflowOptions.newBuilder()
-				.setWorkflowId(WORKDLOW_ID + "NS-12345") // Append the case ID to the Workflow ID
+				.setWorkflowId(WORKDLOW_ID + "NS-12346") // Append the case ID to the Workflow ID
 				.setTaskQueue(TASK_QUEUE)
 				.setWorkflowIdReusePolicy(
 						WorkflowIdReusePolicy.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY)  // Allow duplicate Workflow IDs only if the previous Workflow execution failed
@@ -54,6 +54,6 @@ public class DisputeResolutionWorkflowLauncher {
 
 		// Start the single Workflow execution
 		DisputeResolutionWorkflow workflow = client.newWorkflowStub(DisputeResolutionWorkflow.class, workflowOptions);
-		WorkflowClient.start(workflow::startDisputeResolution, "NS-12345"); // Pass the case ID as an argument
+		WorkflowClient.start(workflow::startDisputeResolution, "NS-12346"); // Pass the case ID as an argument
 	}
 }
